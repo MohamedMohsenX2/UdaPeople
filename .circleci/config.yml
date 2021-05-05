@@ -96,6 +96,9 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Installing tar utility
+          command: yum -y install tar gzip
+      - run:
           name: Deploying backend infrastructure to AWS
           command: |
             aws cloudformation deploy \
