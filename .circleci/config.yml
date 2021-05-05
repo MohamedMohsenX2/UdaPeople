@@ -58,7 +58,7 @@ jobs:
           name: Audting Frontend
           command: |
             cd frontend
-            npm audit --audit-level=critical
+            npm audit fix --audit-level=critical
 
   scan-backend:
     docker:
