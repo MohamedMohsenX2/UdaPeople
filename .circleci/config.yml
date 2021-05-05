@@ -1,5 +1,8 @@
 version: 2.1
-          
+       
+orbs:
+  slack: circleci/slack@4.4.2
+  
 jobs:
   build-frontend:
     docker:
@@ -58,8 +61,14 @@ jobs:
           name: Audting Frontend
           command: |
             cd frontend
-            npm ci
-            npm audit fix --audit-level=critical
+            npm audit fix --audit-level=critical --force
+      - slack/notify:
+          event: fail
+          mentions: '@EngineeringTeam'
+          template: basic_fail_1
+      - slack/notify:
+          event: pass
+          template: success_tagged_deploy_1
 
   scan-backend:
     docker:
@@ -70,8 +79,14 @@ jobs:
           name: Auditing Backend
           command: |
             cd backend
-            npm audit fix --audit-level=critical
-
+            npm audit fix --audit-level=critical --force
+      - slack/notify:
+          event: fail
+          mentions: '@EngineeringTeam'
+          template: basic_fail_1
+      - slack/notify:
+          event: pass
+          template: success_tagged_deploy_1
           
           
 workflows:
@@ -85,5 +100,7 @@ workflows:
           requires: [build-backend]
       - scan-backend:
           requires: [build-backend]
+          context: slack-context
       - scan-frontend:
           requires: [build-frontend]
+          context: slack-context
