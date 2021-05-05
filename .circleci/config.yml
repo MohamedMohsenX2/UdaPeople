@@ -88,8 +88,62 @@ jobs:
       - slack/notify:
           event: pass
           template: success_tagged_deploy_1
-          
-          
+
+
+  deploy-infrastructure:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: Deploying backend infrastructure to AWS
+          command: |
+            aws cloudformation deploy \
+              --template-file .circleci/files/backend.yml \
+              --tags project=UdaPeople \
+              --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
+      - run:
+          name: Deploying Frontend infrastructure to AWS
+          command: |
+            aws cloudformation deploy \
+              --template-file .circleci/files/frontend.yml \
+              --tags project=UdaPeople \
+              --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  
+      - run:
+          name: Add back-end ip to ansible inventory
+          command: |
+            aws ec2 describe-instances \
+              --query 'Reservations[*].Instances[*].PublicIpAddress' \
+              --filters "Name=tag:Name,Values=udapeople-backend-${CIRCLE_WORKFLOW_ID}"" \
+              --output text >> .circleci/ansible/inventory.txt
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - project/.circleci/ansible/inventory.txt
+
+  configure-infrastructure:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - "06:c4:d0:27:b0:90:c4:6a:81:9a:af:b4:96:57:a2:d6"
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --update ansible
+      - run:
+          name: Configure server
+          command: |
+            cd .circleci/ansible
+            ansible-playbook configure-server.yml -i inventory.txt
+      # Here's where you will add some code to rollback on failure      
+
 workflows:
   default:
     jobs:
@@ -105,3 +159,16 @@ workflows:
       - scan-frontend:
           requires: [build-frontend]
           context: slack-context
+      - deploy-infrastructure:
+          filters:
+            branches:
+              only: main
+          requires:
+            - scan-frontend
+            - scan-backend
+      - configure-infrastructure:
+          filters:
+            branches:
+              only: main
+          requires:
+            - deploy-infrastructure
