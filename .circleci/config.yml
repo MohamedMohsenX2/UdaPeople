@@ -162,13 +162,13 @@ workflows:
       - deploy-infrastructure:
           filters:
             branches:
-              only: main
+              only: master
           requires:
             - scan-frontend
             - scan-backend
       - configure-infrastructure:
           filters:
             branches:
-              only: main
+              only: master
           requires:
             - deploy-infrastructure
