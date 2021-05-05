@@ -69,7 +69,7 @@ jobs:
           name: Auditing Backend
           command: |
             cd backend
-            npm audit --audit-level=critical
+            npm audit fix --audit-level=critical
 
           
           
