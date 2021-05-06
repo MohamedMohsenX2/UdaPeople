@@ -23,7 +23,7 @@ commands:
           # Add when this will run
           command: |
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-            SUCCESS = $(curl -H "token: 4148b519-c531-4bf7-9974-f4d73b474107" --request GET https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID:0:7})
+            export SUCCESS=$(curl -H "token: 4148b519-c531-4bf7-9974-f4d73b474107" --request GET https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID:0:7})
             if(( $SUCCESS==1 )); 
             then
               cd backend
@@ -186,7 +186,6 @@ jobs:
             cd .circleci/ansible
             curl -H "token: 4148b519-c531-4bf7-9974-f4d73b474107" --request GET https://api.memstash.io/values/backend_api >> inventory.txt
             ansible-playbook configure-server.yml -i inventory.txt
-      - revert-migration
       - destroy-environment
       
   run-migrations:
