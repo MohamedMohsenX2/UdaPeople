@@ -143,7 +143,7 @@ jobs:
           command: |
             aws cloudformation deploy \
               --template-file .circleci/files/backend.yml \
-              --tags project=UdaPeople \
+              --tags project=udapeople \
               --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
       - run:
@@ -151,7 +151,7 @@ jobs:
           command: |
             aws cloudformation deploy \
               --template-file .circleci/files/frontend.yml \
-              --tags project=UdaPeople \
+              --tags project=udapeople \
               --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  
       - run:
@@ -163,7 +163,8 @@ jobs:
             echo ${BACKEND_API_URL}
             curl -H "Content-Type: text/plain" -H "token: 4148b519-c531-4bf7-9974-f4d73b474107" \
               --request PUT --data "$BACKEND_API_URL" https://api.memstash.io/values/backend_api
-
+      - destroy-environment
+      
   configure-infrastructure:
     docker:
       - image: python:3.7-alpine3.11
