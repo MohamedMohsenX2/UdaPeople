@@ -31,7 +31,6 @@ commands:
               npm run migrations:revert
             else
               echo "No migration was done!"
-              return 0
             fi
 
 orbs:
