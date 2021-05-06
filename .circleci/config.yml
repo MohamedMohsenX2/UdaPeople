@@ -196,7 +196,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apt install awscli -y
+            sudo apt install awscli -y
       - run:
           name: Filling .env file with the required data
           command: |
