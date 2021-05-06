@@ -175,7 +175,10 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apk add --update ansible
+            apk --no-cache add curl
+            apk add --no-cache --update ansible
+            apk add --no-cache --upgrade bash
+            pip3 install awscli
       - run:
           name: Configure server
           command: |
@@ -361,18 +364,18 @@ workflows:
     jobs:
       - build-frontend
       - build-backend
-      - test-frontend:
-          requires: [build-frontend]
-      - test-backend:
-          requires: [build-backend]
-      - scan-backend:
-          requires: [build-backend]
-          context: slack-context
-      - scan-frontend:
-          requires: [build-frontend]
-          context: slack-context
+      # - test-frontend:
+      #     requires: [build-frontend]
+      # - test-backend:
+      #     requires: [build-backend]
+      # - scan-backend:
+      #     requires: [build-backend]
+      #     context: slack-context
+      # - scan-frontend:
+      #     requires: [build-frontend]
+      #     context: slack-context
       - deploy-infrastructure:
-          requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+ #         requires: [test-frontend, test-backend, scan-frontend, scan-backend]
           filters:
             branches:
               only: [master]
