@@ -18,7 +18,6 @@ commands:
   revert-migration:
     description: Revert the last migration if successfully run in the current workflow.   
     steps:
-      - checkout
       - run:
           name: Revert migrations
           when: on_fail
@@ -320,6 +319,7 @@ jobs:
     docker:
       - image: circleci/node:13.8.0 
     steps:
+      - checkout
       - run:
           name: Install dependencies
           command: |
@@ -331,7 +331,7 @@ jobs:
             BACKEND_API_URL=$(curl -H "token: 4148b519-c531-4bf7-9974-f4d73b474107" --request GET https://api.memstash.io/values/backend_api)
             API_URL="http://${BACKEND_API_URL}:3030"
             echo "${API_URL}"            
-            curl "http://${API_URL}:3030/api/status"
+            curl http://${API_URL}:3030/api/status
       - run:
           name: Frontend smoke test.
           command: |
