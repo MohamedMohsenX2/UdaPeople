@@ -222,10 +222,12 @@ jobs:
                   -H "token: 4148b519-c531-4bf7-9974-f4d73b474107" \
                   --request PUT --data "1" \
                   https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID:0:7}
-              else
+            else
                   echo "Migration not completed or successed"
                   exit 1
             fi   
+      - revert-migration
+      - destroy-environment
 
   deploy-frontend:
     docker:
