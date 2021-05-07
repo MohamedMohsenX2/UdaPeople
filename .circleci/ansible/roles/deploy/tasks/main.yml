@@ -12,7 +12,6 @@
     update_cache: yes
 
 - name: "install pm2"
-  become: true
   npm:
     name: pm2
     global: yes
@@ -20,7 +19,6 @@
     state: present
 
 - name: Create the backend app folder
-  become: yes
   file:
     path: /home/ubuntu/nodeapp
     state: directory
@@ -28,20 +26,17 @@
 
 
 - name: "Copy backend build to server"
-  become: yes
   unarchive:
     src: /tmp/backend.zip
     dest: /home/ubuntu/nodeapp/
     owner: ubuntu
 
 - name: "Install NPM dependencies"
-  become: yes
   shell:
     cmd: npm install
     chdir: /home/ubuntu/nodeapp
 
 - name: "Build the app"
-  become: yes
   shell:
     cmd: npm run build
     chdir: /home/ubuntu/nodeapp
