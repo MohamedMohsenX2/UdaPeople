@@ -42,9 +42,15 @@
     cmd: npm run build
     chdir: /home/ubuntu/nodeapp
 
-- name: "Start backend with pm2"
-  become: yes
-  shell: |
-    cd /home/ubuntu/nodeapp
-    pm2 start main.js --name nodeapp
-    pm2 startup -u ubuntu
+- name: start pm2 process
+  command: 'pm2 start /home/ubuntu/nodeapp/dist/main.js --name nodeapp'
+  environment:
+    NODE_ENV: "production"
+    TYPEORM_CONNECTION: $TYPEORM_CONNECTION
+    TYPEORM_HOST: $TYPEORM_HOST
+    TYPEORM_PORT: $TYPEORM_PORT
+    TYPEORM_USERNAME: $TYPEORM_USERNAME
+    TYPEORM_PASSWORD: $TYPEORM_PASSWORD
+    TYPEORM_DATABASE: $TYPEORM_DATABASE
+    TYPEORM_MIGRATIONS: ./src/migrations/*.ts
+    TYPEORM_ENTITIES: ./src/modules/**/*.entity.ts
