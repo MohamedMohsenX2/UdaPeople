@@ -282,6 +282,7 @@ jobs:
           command: |
             apk --no-cache add curl
             apk add --no-cache --update ansible
+            ansible-galaxy install weareinteractive.environment
             apk add --no-cache openssh-client
             apk add --no-cache --upgrade bash
             apk add --update npm
@@ -298,8 +299,8 @@ jobs:
             echo ENVIROMENT=production > "backend/.env"
             echo TYPEORM_CONNECTION=$TYPEORM_CONNECTION >> "backend/.env"
             echo TYPEORM_MIGRATIONS_DIR=./src/migrations >> "backend/.env"
-            echo TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts >> "backend/.env"
-            echo TYPEORM_MIGRATIONS=./src/migrations/*.ts >> "backend/.env"
+            echo TYPEORM_ENTITIES=$TYPEORM_ENTITIES >> "backend/.env"
+            echo TYPEORM_MIGRATIONS=$TYPEORM_MIGRATIONS >> "backend/.env"
             echo TYPEORM_HOST=$TYPEORM_HOST >> "backend/.env"
             echo TYPEORM_PORT=$TYPEORM_PORT >> "backend/.env"
             echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> "backend/.env"
@@ -309,7 +310,7 @@ jobs:
           name: Deploy backend
           command: |
             export ANSIBLE_HOST_KEY_CHECKING=False
-            cd backend;zip -r /tmp/backend.zip *
+            cd backend;zip -r /tmp/backend.zip * .env
             ansible-playbook \
               -i ../.circleci/ansible/inventory.txt \
               ../.circleci/ansible/deploy-backend.yml
