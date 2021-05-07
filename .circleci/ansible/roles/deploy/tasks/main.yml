@@ -24,6 +24,8 @@
   file:
     path: /home/ubuntu/nodeapp
     state: directory
+    owner: ubuntu
+
 
 - name: "Copy backend build to server"
   become: yes
@@ -39,6 +41,7 @@
     chdir: /home/ubuntu/nodeapp
 
 - name: "Build the app"
+  become: yes
   shell:
     cmd: npm run build
     chdir: /home/ubuntu/nodeapp
