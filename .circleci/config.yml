@@ -349,8 +349,8 @@ jobs:
             else
             return 0
             fi
-      # - revert-migration
-      # - destroy-environment
+       - revert-migration
+       - destroy-environment
 
   cloudfront-update:
     docker:

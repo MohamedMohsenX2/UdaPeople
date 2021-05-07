@@ -41,6 +41,7 @@
   become: yes
   shell: |
     export ENVIRONMENT=production
+    export NODE_ENV=production
     export TYPEORM_CONNECTION=postgres
     export TYPEORM_HOST="{{ lookup('env', 'TYPEORM_HOST') }}"
     export TYPEORM_ENTITIES="./modules/domain/**/*.entity*.{ts,js}"
