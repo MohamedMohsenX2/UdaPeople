@@ -33,8 +33,9 @@
     owner: ubuntu
 
 - name: "Install NPM dependencies"
+  become: yes
   shell:
-    cmd: npm install --production
+    cmd: npm install
     chdir: /home/ubuntu/nodeapp
 
 - name: "Build the app"
