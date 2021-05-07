@@ -311,8 +311,8 @@ jobs:
             export ANSIBLE_HOST_KEY_CHECKING=False
             cd backend;zip -r /tmp/backend.zip *
             ansible-playbook \
-              -i .circleci/ansible/inventory.txt \
-              .circleci/ansible/deploy-backend.yml
+              -i ../.circleci/ansible/inventory.txt \
+              ../.circleci/ansible/deploy-backend.yml
       - revert-migration
       - destroy-environment
 
