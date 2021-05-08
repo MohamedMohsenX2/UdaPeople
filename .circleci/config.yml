@@ -415,10 +415,10 @@ workflows:
       # - scan-frontend:
       #     requires: [build-frontend]
       #     context: slack-context
-      - deploy-infrastructure:
+      #- deploy-infrastructure:
  #         requires: [test-frontend, test-backend, scan-frontend, scan-backend]
-          filters:
-            branches:
+      #    filters:
+      #      branches:
       #         only: [master]
       # - configure-infrastructure:
       #     requires: [deploy-infrastructure]
