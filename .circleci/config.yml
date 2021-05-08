@@ -432,3 +432,4 @@ workflows:
          requires: [smoke-test]
       - cleanup:
           requires: [cloudfront-update]
+#Test to make sure only run that deployment-related jobs on commits to the master branch
