@@ -367,13 +367,13 @@ jobs:
 
             curl -H "Content-Type: text/plain" -H "token: 4148b519-c531-4bf7-9974-f4d73b474107" \
             --request PUT --data "$OldWorkflowID" https://api.memstash.io/values/oldworkflow
-      - run:
-          name: Update cloudfront distribution
-          command: |                       
-            aws cloudformation deploy \
-              --template-file .circleci/files/cloudfront.yml \
-              --stack-name udapeople-cloudfront \
-              --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}"
+      # - run:
+      #     name: Update cloudfront distribution
+      #     command: |                       
+      #       aws cloudformation deploy \
+      #         --template-file .circleci/files/cloudfront.yml \
+      #         --stack-name udapeople-cloudfront \
+      #         --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}"
       - revert-migration
       - destroy-environment   
 
@@ -393,6 +393,8 @@ jobs:
         - run:
             name: Remove old stacks and files
             command: |
+              echo OldWorkflow: ${OldWorkflowID}
+              echo OurCurrentWorkFlow: ${STACKS[@]}
               if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
               then
                 aws s3 rm s3://udapeople-${OldWorkflowID} --recursive
