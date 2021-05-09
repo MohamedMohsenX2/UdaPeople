@@ -266,8 +266,8 @@ jobs:
           name: Push the built frotend files to S3
           command: |
             aws s3 cp frontend/dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}/ --recursive
-      # - revert-migration
-      # - destroy-environment   
+      - revert-migration
+      - destroy-environment   
                     
   deploy-backend:
     docker:
@@ -319,8 +319,8 @@ jobs:
             ansible-playbook \
               -i ../../.circleci/ansible/inventory.txt \
               ../../.circleci/ansible/deploy-backend.yml
-      # - revert-migration
-      # - destroy-environment
+      - revert-migration
+      - destroy-environment
 
   smoke-test:
     docker:
